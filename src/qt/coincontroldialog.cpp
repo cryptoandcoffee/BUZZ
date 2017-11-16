@@ -848,7 +848,7 @@ void CoinControlDialog::updateView()
             itemOutput->setText(COLUMN_AGE_INT64, QString::number((double)nAge / 86400, 'f', 2));
 
             // potential stake
-            double nPotentialStake = (double)nBlockSize * (GetCoinYearReward(nBestHeight)/CENT/100) * ((double)nAge / (86400) / 365);
+            double nPotentialStake = (double)nBlockSize * (GetCoinYearReward()/CENT/100) * ((double)nAge / (86400) / 365);
             itemOutput->setText(COLUMN_POTENTIAL_STAKE, QString::number(nPotentialStake, 'f', 2));
             itemOutput->setText(COLUMN_POTENTIAL_STAKE_INT64, strPad(QString::number((int64_t)nPotentialStake), 16, " "));
 

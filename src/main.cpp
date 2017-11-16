@@ -1050,11 +1050,10 @@ int64_t GetProofOfWorkReward(int64_t nFees)
         return nSubsidy + (nFees / 2);
 }
 
-static const int64_t COIN_YEAR_REWARD = 1200 * CENT; // 1% per year
-// miner's coin stake reward
+// staker's coin stake reward
 uint64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, uint64_t nCoinAge, int64_t nFees)
 {
-    int64_t nSubsidy = nCoinAge * COIN_YEAR_REWARD * 33 / (365 * 33 + 8);
+    int64_t nSubsidy = nCoinAge * GetCoinYearReward() * 33 / (365 * 33 + 8);
 
     LogPrint("creation", "GetProofOfStakeReward(): create=%s nCoinAge=%d\n", FormatMoney(nSubsidy), nCoinAge);
 
