@@ -463,6 +463,7 @@
           </size>
          </property>
         </widget>
+       </item>
        <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">

@@ -55,20 +55,19 @@ private:
         COLUMN_AMOUNT,
         COLUMN_CONFIRMATIONS,
 		COLUMN_AGE,
-		COLUMN_POTENTIALSTAKE,
+		COLUMN_POTENTIAL_STAKE,
 		COLUMN_TIMEESTIMATE,
         COLUMN_WEIGHT,
         COLUMN_LABEL,
         COLUMN_ADDRESS,
         COLUMN_DATE,
-        COLUMN_CONFIRMATIONS,
         COLUMN_PRIORITY,
         COLUMN_TXHASH,
         COLUMN_VOUT_INDEX,
         COLUMN_AMOUNT_INT64,
         COLUMN_PRIORITY_INT64,
         COLUMN_AGE_INT64,
-        COLUMN_POTENTIALSTAKE_INT64,
+        COLUMN_POTENTIAL_STAKE_INT64,
     };
 
 private slots:
@@ -93,7 +92,6 @@ private slots:
     void headerSectionClicked(int);
     void buttonBoxClicked(QAbstractButton*);
     void buttonSelectAllClicked();
-    void updateLabelLocked();
     void customSelectCoins();
     void updateLabelLocked();
 };

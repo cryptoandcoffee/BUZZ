@@ -438,7 +438,7 @@ void CoinControlDialog::sortView(int column, Qt::SortOrder order)
     sortColumn = column;
     sortOrder = order;
     ui->treeWidget->sortItems(column, order);
-    ui->treeWidget->header()->setSortIndicator((sortColumn == COLUMN_AMOUNT_INT64 ? COLUMN_AMOUNT : (sortColumn == COLUMN_POTENTIALSTAKE_INT64 ? COLUMN_POTENTIALSTAKE : (sortColumn == COLUMN_AGE_INT64 ? COLUMN_AGE : sortColumn))), sortOrder);
+    ui->treeWidget->header()->setSortIndicator((sortColumn == COLUMN_AMOUNT_INT64 ? COLUMN_AMOUNT : (sortColumn == COLUMN_POTENTIAL_STAKE_INT64 ? COLUMN_POTENTIAL_STAKE : (sortColumn == COLUMN_AGE_INT64 ? COLUMN_AGE : sortColumn))), sortOrder);
 }
 
 // treeview: clicked on header
@@ -459,8 +459,8 @@ void CoinControlDialog::headerSectionClicked(int logicalIndex)
             logicalIndex = COLUMN_AGE_INT64;	
 
         // sort by potential stake
-		if (logicalIndex == COLUMN_POTENTIALSTAKE) 
-            logicalIndex = COLUMN_POTENTIALSTAKE_INT64;
+		if (logicalIndex == COLUMN_POTENTIAL_STAKE) 
+            logicalIndex = COLUMN_POTENTIAL_STAKE_INT64;
 
          // sort by priority
         if (logicalIndex == COLUMN_PRIORITY)
@@ -471,7 +471,7 @@ void CoinControlDialog::headerSectionClicked(int logicalIndex)
         else
         {
             sortColumn = logicalIndex;
-            sortOrder = ((sortColumn == COLUMN_AMOUNT_INT64 || sortColumn == COLUMN_PRIORITY_INT64 || sortColumn == COLUMN_DATE || sortColumn == COLUMN_CONFIRMATIONS || sortColumn == COLUMN_AGE_INT64 || sortColumn == COLUMN_POTENTIALSTAKE_INT64) ? Qt::DescendingOrder : Qt::AscendingOrder); // if amount,date,conf,priority then default => desc, else default => asc
+            sortOrder = ((sortColumn == COLUMN_AMOUNT_INT64 || sortColumn == COLUMN_PRIORITY_INT64 || sortColumn == COLUMN_DATE || sortColumn == COLUMN_CONFIRMATIONS || sortColumn == COLUMN_AGE_INT64 || sortColumn == COLUMN_POTENTIAL_STAKE_INT64) ? Qt::DescendingOrder : Qt::AscendingOrder); // if amount,date,conf,priority then default => desc, else default => asc
         }
 
         sortView(sortColumn, sortOrder);
@@ -755,7 +755,6 @@ void CoinControlDialog::updateView()
         double dPrioritySum = 0;
         int nChildren = 0;
         int nInputSum = 0;
-        int nInputSum = 0;
         uint64_t nDisplayWeight = 0;
         uint64_t nTxWeightSum = 0;
         uint64_t nPotentialStakeSum = 0;
@@ -850,8 +849,8 @@ void CoinControlDialog::updateView()
 
             // potential stake
             double nPotentialStake = (double)nBlockSize * (GetCoinYearReward(nBestHeight)/CENT/100) * ((double)nAge / (86400) / 365);
-            itemOutput->setText(COLUMN_POTENTIALSTAKE, QString::number(nPotentialStake, 'f', 2));
-            itemOutput->setText(COLUMN_POTENTIALSTAKE_INT64, strPad(QString::number((int64_t)nPotentialStake), 16, " "));
+            itemOutput->setText(COLUMN_POTENTIAL_STAKE, QString::number(nPotentialStake, 'f', 2));
+            itemOutput->setText(COLUMN_POTENTIAL_STAKE_INT64, strPad(QString::number((int64_t)nPotentialStake), 16, " "));
 
             // potential stake sum for tree view
             nPotentialStakeSum = nPotentialStake * COIN;
@@ -905,8 +904,8 @@ void CoinControlDialog::updateView()
             itemWalletAddress->setText(COLUMN_AMOUNT_INT64, strPad(QString::number(nSum), 15, " "));
             itemWalletAddress->setText(COLUMN_PRIORITY, CoinControlDialog::getPriorityLabel(dPrioritySum));
             itemWalletAddress->setText(COLUMN_PRIORITY_INT64, strPad(QString::number((int64_t)dPrioritySum), 20, " "));
-            itemWalletAddress->setText(COLUMN_POTENTIALSTAKE, BitcoinUnits::formatAge(nDisplayUnit, nPotentialStakeSum));
-            itemWalletAddress->setText(COLUMN_POTENTIALSTAKE_INT64, strPad(QString::number(nPotentialStakeSum), 20, " "));
+            itemWalletAddress->setText(COLUMN_POTENTIAL_STAKE, BitcoinUnits::formatAge(nDisplayUnit, nPotentialStakeSum));
+            itemWalletAddress->setText(COLUMN_POTENTIAL_STAKE_INT64, strPad(QString::number(nPotentialStakeSum), 20, " "));
 
             // Tree mode weight
             itemWalletAddress->setText(COLUMN_WEIGHT, strPad(QString::number((uint64_t)nTxWeightSum), 8, " "));
