@@ -152,7 +152,6 @@ void UnregisterNodeSignals(CNodeSignals& nodeSignals)
 }
 
 
-
 //////////////////////////////////////////////////////////////////////////////
 //
 // mapOrphanTransactions
@@ -164,13 +163,11 @@ bool AddOrphanTx(const CTransaction& tx)
     if (mapOrphanTransactions.count(hash))
         return false;
 
-    // Ignore big transactions, to avoid a
-    // send-big-orphans memory exhaustion attack. If a peer has a legitimate
-    // large transaction with a missing parent then we assume
-    // it will rebroadcast it later, after the parent transaction(s)
-    // have been mined or received.
-    // 10,000 orphans, each of which is at most 5,000 bytes big is
-    // at most 500 megabytes of orphans:
+    // Ignore big transactions, to avoid a send-big-orphans memory exhaustion attack.
+    // If a peer has a legitimate large transaction with a missing parent then
+    // we assume it will rebroadcast it later, after the parent transaction(s)
+    // have been mined or received. 10,000 orphans, each of which is at most
+    // 5,000 bytes big is at most 500 megabytes of orphans:
 
     size_t nSize = tx.GetSerializeSize(SER_NETWORK, CTransaction::CURRENT_VERSION);
 
@@ -221,11 +218,6 @@ unsigned int LimitOrphanTxSize(unsigned int nMaxOrphans)
     }
     return nEvicted;
 }
-
-
-
-
-
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -289,6 +281,7 @@ bool IsStandardTx(const CTransaction& tx, string& reason)
         reason = "non-final";
         return false;
     }
+
     // nTime has different purpose from nLockTime but can be used in similar attacks
     if (tx.nTime > FutureDrift(GetAdjustedTime(), nBestHeight + 1)) {
         reason = "time-too-new";
@@ -318,10 +311,12 @@ bool IsStandardTx(const CTransaction& tx, string& reason)
             reason = "scriptsig-size";
             return false;
         }
+
         if (!txin.scriptSig.IsPushOnly()) {
             reason = "scriptsig-not-pushonly";
             return false;
         }
+        
         if (!txin.scriptSig.HasCanonicalPushes()) {
             reason = "scriptsig-non-canonical-push";
             return false;
@@ -656,9 +651,11 @@ int64_t GetMinFee(const CTransaction& tx, unsigned int nBlockSize, enum GetMinFe
             }
             if (t > Fork3){nNewMinFee = (txout.nValue /100000) * 1;}
             else {nNewMinFee = (txout.nValue / 100) * 25;}
-}
+        }
+
         nMinFee += nNewMinFee;
     }
+
     if(nMinFee > COIN*1000000000) // max 1 billion coins fee.
     {
         nMinFee=COIN*1000000000;
@@ -1036,23 +1033,29 @@ static CBigNum GetProofOfStakeLimit(int nHeight)
 }
 
 // miner's coin base reward
-time_t t=time(NULL);
 int64_t GetProofOfWorkReward(int64_t nFees)
 {
     int64_t nSubsidy = 10 * COIN;
-	if(pindexBest->nHeight == 1) { nSubsidy = 100000 * COIN; }
+    
+    // premine
+	if(pindexBest->nHeight == 1) {
+        nSubsidy = 100000 * COIN;
+    }
+
     LogPrint("creation", "GetProofOfWorkReward() : create=%s nSubsidy=%d\n", FormatMoney(nSubsidy), nSubsidy);
 
-    if (t > 1505852400)
-        {return nSubsidy;} 
-    else
-        return nSubsidy + (nFees / 2);
+    time_t t = time(NULL);
+    
+    if (t > 1505852400) {
+        return nSubsidy;
+    }
+
+    return nSubsidy + (nFees / 2);
 }
 
 // stakers's coin stake reward
 int64_t GetProofOfStakeReward(int64_t nCoinAge, int64_t nFees)
 {
-
     int64_t nSubsidy = nCoinAge * GetCoinYearReward() * 33 / (365 * 33 + GetMinStakeAge());
 
     LogPrint("creation", "GetProofOfStakeReward(): create=%s nCoinAge=%d\n", FormatMoney(nSubsidy), nCoinAge);
@@ -1060,7 +1063,6 @@ int64_t GetProofOfStakeReward(int64_t nCoinAge, int64_t nFees)
     return nSubsidy;
 }
 
-static const int64_t nTargetTimespan = 120; // 16 mins
 //
 // maximum nBits value could possible be required nTime after
 //
@@ -1108,6 +1110,7 @@ const CBlockIndex* GetLastBlockIndex(const CBlockIndex* pindex, bool fProofOfSta
 }
 
 int nTargetSpacing = 60;
+static const int64_t nTargetTimespan = 120; // 16 mins
 
 unsigned int GetNextTargetRequired(const CBlockIndex* pindexLast, bool fProofOfStake)
 {
