@@ -139,7 +139,6 @@ QString BitcoinUnits::formatAge(int unit, qint64 n, bool fPlus)
 }
 
 
-
 QString BitcoinUnits::formatWithUnit(int unit, qint64 amount, bool plussign)
 {
     return format(unit, amount, plussign) + QString(" ") + name(unit);

@@ -95,7 +95,7 @@ public:
     bool changePassphrase(const SecureString &oldPass, const SecureString &newPass);
     // Wallet backup
     bool backupWallet(const QString &filename);
-    
+
     // Pass coin control information
     void getStakeWeightFromValue(const int64_t& nTime, const int64_t& nValue, uint64_t& nWeight);
     void setSplitBlock(bool fSplitBlock);
@@ -134,6 +134,7 @@ public:
 
 private:
     CWallet *wallet;
+    bool fForceCheckBalanceChanged;
 
     // Wallet has an options model for wallet-specific options
     // (transaction fee, for example)

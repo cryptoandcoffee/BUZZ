@@ -97,7 +97,7 @@ class CWalletDB : public CDB
 
     bool WriteStakeSplitThreshold(uint64_t nStakeSplitThreshold);
 
-    bool WriteDefaultKey(const CPubKey &vchPubKey);
+    bool WriteDefaultKey(const CPubKey& vchPubKey);
 
     bool ReadPool(int64_t nPool, CKeyPool &keypool);
     bool WritePool(int64_t nPool, const CKeyPool &keypool);

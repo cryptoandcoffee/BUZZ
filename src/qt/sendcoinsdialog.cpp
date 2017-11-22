@@ -53,14 +53,13 @@ SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
     connect(ui->lineEditCoinControlChange, SIGNAL(textEdited(const QString &)), this, SLOT(coinControlChangeEdited(const QString &)));
     connect(ui->splitBlockCheckBox, SIGNAL(stateChanged(int)), this, SLOT(coinControlSplitBlockChecked(int)));
     connect(ui->splitBlockLineEdit, SIGNAL(textChanged(const QString &)), this, SLOT(splitBlockLineEditChanged(const QString &)));
-    
+
     // Coin Control: clipboard actions
     QAction *clipboardQuantityAction = new QAction(tr("Copy quantity"), this);
     QAction *clipboardAmountAction = new QAction(tr("Copy amount"), this);
     QAction *clipboardFeeAction = new QAction(tr("Copy fee"), this);
     QAction *clipboardAfterFeeAction = new QAction(tr("Copy after fee"), this);
     QAction *clipboardBytesAction = new QAction(tr("Copy bytes"), this);
-    QAction *clipboardPriorityAction = new QAction(tr("Copy priority"), this);
     QAction *clipboardLowOutputAction = new QAction(tr("Copy low output"), this);
     QAction *clipboardChangeAction = new QAction(tr("Copy change"), this);
     connect(clipboardQuantityAction, SIGNAL(triggered()), this, SLOT(coinControlClipboardQuantity()));
@@ -68,7 +67,6 @@ SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
     connect(clipboardFeeAction, SIGNAL(triggered()), this, SLOT(coinControlClipboardFee()));
     connect(clipboardAfterFeeAction, SIGNAL(triggered()), this, SLOT(coinControlClipboardAfterFee()));
     connect(clipboardBytesAction, SIGNAL(triggered()), this, SLOT(coinControlClipboardBytes()));
-    connect(clipboardPriorityAction, SIGNAL(triggered()), this, SLOT(coinControlClipboardPriority()));
     connect(clipboardLowOutputAction, SIGNAL(triggered()), this, SLOT(coinControlClipboardLowOutput()));
     connect(clipboardChangeAction, SIGNAL(triggered()), this, SLOT(coinControlClipboardChange()));
     ui->labelCoinControlQuantity->addAction(clipboardQuantityAction);
@@ -76,7 +74,6 @@ SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
     ui->labelCoinControlFee->addAction(clipboardFeeAction);
     ui->labelCoinControlAfterFee->addAction(clipboardAfterFeeAction);
     ui->labelCoinControlBytes->addAction(clipboardBytesAction);
-    ui->labelCoinControlPriority->addAction(clipboardPriorityAction);
     ui->labelCoinControlLowOutput->addAction(clipboardLowOutputAction);
     ui->labelCoinControlChange->addAction(clipboardChangeAction);
 
@@ -92,18 +89,6 @@ void SendCoinsDialog::setModel(WalletModel *model)
         for(int i = 0; i < ui->entries->count(); ++i)
         {
             SendCoinsEntry *entry = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());
-            
-            CBitcoinAddress address = entry->getValue().address.toStdString();
-            if (!model->isMine(address) && ui->splitBlockCheckBox->checkState() == Qt::Checked)
-            {
-                model->setSplitBlock(false); // dont allow block splitting if recipient is an external address.
-                ui->splitBlockCheckBox->setCheckState(Qt::Unchecked);
-                QMessageBox::warning(this, tr("Send Coins"),
-                    tr("The split block feature does not work when sending to external addresses. Please try again."),
-                    QMessageBox::Ok, QMessageBox::Ok);
-                return;
-            }
-
             if(entry)
             {
                 entry->setModel(model);
@@ -139,6 +124,16 @@ void SendCoinsDialog::on_sendButton_clicked()
     for(int i = 0; i < ui->entries->count(); ++i)
     {
         SendCoinsEntry *entry = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());
+        CBitcoinAddress address = entry->getValue().address.toStdString();
+        if (!model->isMine(address) && ui->splitBlockCheckBox->checkState() == Qt::Checked)
+        {
+            model->setSplitBlock(false); // dont allow block splitting if recipient is an external address.
+            ui->splitBlockCheckBox->setCheckState(Qt::Unchecked);
+            QMessageBox::warning(this, tr("Send Coins"),
+                tr("The split block feature does not work when sending to external addresses. Please try again."),
+                QMessageBox::Ok, QMessageBox::Ok);
+            return;
+        }
         if(entry)
         {
             if(entry->validate())
@@ -163,7 +158,8 @@ void SendCoinsDialog::on_sendButton_clicked()
         model->setSplitBlock(true);
     else
         model->setSplitBlock(false);
-     // Can't block split with multiple addresses.
+
+    // Can't block split with multiple addresses.
     if (ui->entries->count() > 1 && ui->splitBlockCheckBox->checkState() == Qt::Checked)
     {
         model->setSplitBlock(false);
@@ -173,7 +169,8 @@ void SendCoinsDialog::on_sendButton_clicked()
             QMessageBox::Ok, QMessageBox::Ok);
         return;
     }
-     if (model->getSplitBlock())
+
+    if (model->getSplitBlock())
         nSplitBlock = int(ui->splitBlockLineEdit->text().toDouble());
 
     // Format confirmation message
@@ -449,12 +446,6 @@ void SendCoinsDialog::coinControlClipboardBytes()
     QApplication::clipboard()->setText(ui->labelCoinControlBytes->text());
 }
 
-// Coin Control: copy label "Priority" to clipboard
-void SendCoinsDialog::coinControlClipboardPriority()
-{
-    QApplication::clipboard()->setText(ui->labelCoinControlPriority->text());
-}
-
 // Coin Control: copy label "Low output" to clipboard
 void SendCoinsDialog::coinControlClipboardLowOutput()
 {
@@ -516,6 +507,7 @@ void SendCoinsDialog::splitBlockLineEditChanged(const QString & text)
         nSize = nAfterFee / text.toDouble();
     ui->labelBlockSize->setText(QString::number(nSize));
 }
+
 
 // Coin Control: checkbox custom change address
 void SendCoinsDialog::coinControlChangeChecked(int state)

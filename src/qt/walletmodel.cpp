@@ -20,6 +20,8 @@ WalletModel::WalletModel(CWallet *wallet, OptionsModel *optionsModel, QObject *p
     cachedEncryptionStatus(Unencrypted),
     cachedNumBlocks(0)
 {
+    fForceCheckBalanceChanged = false;
+
     addressTableModel = new AddressTableModel(wallet, this);
     transactionTableModel = new TransactionTableModel(wallet, this);
 
@@ -87,8 +89,10 @@ void WalletModel::pollBalanceChanged()
     if(!lockWallet)
         return;
 
-    if(nBestHeight != cachedNumBlocks)
+    if(fForceCheckBalanceChanged || nBestHeight != cachedNumBlocks)
     {
+        fForceCheckBalanceChanged = false;
+
         // Balance and number of transactions might have changed
         cachedNumBlocks = nBestHeight;
 
@@ -121,7 +125,7 @@ void WalletModel::updateTransaction(const QString &hash, int status)
         transactionTableModel->updateTransaction(hash, status);
 
     // Balance and number of transactions might have changed
-    checkBalanceChanged();
+    fForceCheckBalanceChanged = true;
 }
 
 void WalletModel::updateAddressBook(const QString &address, const QString &label, bool isMine, int status)
@@ -195,7 +199,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(const QList<SendCoinsRecipie
         CWalletTx wtx;
         CReserveKey keyChange(wallet);
         int64_t nFeeRequired = 0;
-        bool fCreated = wallet->CreateTransaction(vecSend, wtx, keyChange, nFeeRequired, coinControl);
+        bool fCreated = wallet->CreateTransaction(vecSend, wtx, keyChange, nFeeRequired, nSplitBlock, coinControl);
 
         if(!fCreated)
         {
@@ -234,6 +238,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(const QList<SendCoinsRecipie
             }
         }
     }
+    checkBalanceChanged(); // update balance immediately, otherwise there could be a short noticeable delay until pollBalanceChanged hits
 
     return SendCoinsReturn(OK, 0, hex);
 }
@@ -328,7 +333,6 @@ bool WalletModel::getSplitBlock()
 {
     return wallet->fSplitBlock;
 }
-
 
 // Handlers for core signals
 static void NotifyKeyStoreStatusChanged(WalletModel *walletmodel, CCryptoKeyStore *wallet)
@@ -497,4 +501,4 @@ void WalletModel::listLockedCoins(std::vector<COutPoint>& vOutpts)
 bool WalletModel::isMine(const CBitcoinAddress &address)
 {
     return IsMine(*wallet, address.Get());
-} 
+}
