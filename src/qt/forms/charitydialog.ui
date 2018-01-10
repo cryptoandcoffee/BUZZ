@@ -97,7 +97,7 @@
     <number>1</number>
    </property>
    <property name="text">
-    <string>The "Stake for Charity" feature allows you to automatically send a % of your stake to another BUZZ address. We have enabled this setting so that you can easily support development efforts within BUZZ! Please let us know if you have this setting activated and we will add you to the VIP group!</string>
+    <string>Stake for Charity allows you to donate a percent of your staking rewards to fund development. Thank you for your contribution!</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

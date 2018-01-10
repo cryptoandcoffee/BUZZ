@@ -285,7 +285,6 @@ void BitcoinGUI::createActions()
     // charity gui
     charityAction = new QAction(QIcon(":/icons/novacoin"), tr("&Stake For Charity"), this);
     charityAction->setToolTip(tr("Enable Stake For Charity"));
-    charityAction->setMenuRole(QAction::AboutRole);
 
     optionsAction = new QAction(tr("&Options..."), this);
     optionsAction->setToolTip(tr("Modify configuration options for BUZZ"));
