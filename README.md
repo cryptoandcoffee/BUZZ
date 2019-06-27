@@ -1,4 +1,4 @@
-#BUZZCoin v3.2
+# BUZZCoin v3.2
 
 Copyright (c) 2013 NovaCoin Developers  
 Copyright (c) 2011-2012 PPCoin Developers  
