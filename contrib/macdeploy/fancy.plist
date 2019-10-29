@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>window_bounds</key>
+	<array>
+		<integer>100</integer>
+		<integer>100</integer>
+		<integer>601</integer>
+		<integer>470</integer>
+	</array>
+	<key>icon_size</key>
+	<integer>96</integer>
+	<key>background_picture</key>
+	<string>background-multi.tiff</string>
+	<key>applications_symlink</key>
+	<true/>
+	<key>items_position</key>
+	<dict>
+		<key>Applications</key>
+		<array>
+			<integer>413</integer>
+			<integer>178</integer>
+		</array>
+		<key>Buzzcoin-Qt.app</key>
+		<array>
+			<integer>225</integer>
+			<integer>178</integer>
+		</array>
+	</dict>
+</dict>
+</plist>
